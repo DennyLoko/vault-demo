@@ -6,18 +6,15 @@ const options = {
     token: process.env.VAULT_TOKEN,
 };
 
-const vault = require("node-vault")(options);
+const vault = require('node-vault')(options);
 
-const vaultRead = () => {
-    vault.read('cubbyhole/whats-that').then(secret => {
+const vaultRead = async () => {
+    try {
+        const secret = await vault.read('cubbyhole/whats-that');
         console.log(secret.data);
-
-        setTimeout(vaultRead, 1000);
-    }).catch(() => {
+    } catch (e) {
         console.log('Secret not found!');
-
-        setTimeout(vaultRead, 1000);
-    })
+    }
 };
 
-vaultRead();
+setInterval(vaultRead, 1000);
